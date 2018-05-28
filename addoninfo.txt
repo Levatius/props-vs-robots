@@ -1,0 +1,36 @@
+"AddonInfo"
+{
+	"PenaltiesEnabled"		    "0"
+	"forest_shrine"
+	{
+		"MaxPlayers"		    "8"
+	}
+	"craggy_plateau"
+    {
+        "MaxPlayers"		    "8"
+    }
+    "oasis_temple"
+    {
+        "MaxPlayers"		    "8"
+    }
+    "darkreef_trench"
+    {
+        "MaxPlayers"		    "8"
+    }
+    "dryland_ruins"
+    {
+        "MaxPlayers"		    "8"
+    }
+    "frosty_summit"
+    {
+        "MaxPlayers"		    "8"
+    }
+    "azure_ranch"
+    {
+        "MaxPlayers"            "8"
+    }
+    "concealed_fortress"
+    {
+        "MaxPlayers"            "8"
+    }
+}

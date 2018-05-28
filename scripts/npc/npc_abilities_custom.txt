@@ -1,0 +1,276 @@
+"DOTAAbilities"
+{
+	"Version"		                    "1"
+
+	"transform"
+    {
+        "AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT"
+        "BaseClass"					    "ability_lua"
+        "AbilityTextureName"			"transform"
+        "ScriptFile"					"transform"
+        "MaxLevel"                      "1"
+        "AbilityCastPoint"				"2.75"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "search_radius"         "100"
+            }
+            "02"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "cast_range"	        "300"
+            }
+        }
+    }
+
+    "revert"
+    {
+        "AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+        "BaseClass"					    "ability_lua"
+        "AbilityTextureName"			"revert"
+        "ScriptFile"					"revert"
+        "MaxLevel"                      "1"
+        "AbilityCastPoint"				"1.5"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "cooldown"      	    "16"
+            }
+        }
+    }
+
+    "blend"
+    {
+        "AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_TOGGLE"
+        "BaseClass"					    "ability_lua"
+        "AbilityTextureName"			"blend"
+        "ScriptFile"					"blend"
+        "MaxLevel"                      "1"
+        "AbilityCooldown"				"1"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"				"FIELD_FLOAT"
+                "fow_visible_delay"	    "5"
+            }
+            "02"
+            {
+                "var_type"				"FIELD_FLOAT"
+                "heal_rate"	            "1"
+            }
+        }
+    }
+
+    "taunt"
+    {
+        "AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE"
+        "BaseClass"					    "ability_lua"
+        "AbilityTextureName"			"taunt"
+        "ScriptFile"					"taunt"
+        "MaxLevel"                      "1"
+        "AbilityCooldown"				"4"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"				"FIELD_FLOAT"
+                "dodge_interval"	    "0.25"
+            }
+        }
+    }
+
+    "charge"
+    {
+        "AbilityType"					"DOTA_ABILITY_TYPE_ULTIMATE"
+        "AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT"
+        "BaseClass"					    "ability_lua"
+        "AbilityTextureName"			"charge"
+        "ScriptFile"					"charge"
+        "MaxLevel"                      "1"
+        "AbilityCooldown"				"16"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "speed"	                "900"
+            }
+            "02"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "radius"	            "150"
+            }
+            "03"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "stun_duration"         "2"
+            }
+            "04"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "cast_range"	        "600"
+            }
+        }
+    }
+
+    "light_strike"
+    {
+        "AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_DONT_CANCEL_MOVEMENT"
+        "AbilityUnitDamageType"			"DAMAGE_TYPE_PURE"
+        "BaseClass"					    "ability_lua"
+        "AbilityTextureName"			"light_strike"
+        "ScriptFile"					"light_strike"
+        "MaxLevel"                      "1"
+        "AbilityCooldown"				"1"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "aoe"	                "50"
+            }
+            "02"
+            {
+                "var_type"				"FIELD_FLOAT"
+                "delay"	                "0.25"
+            }
+            "03"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "damage"	            "1"
+            }
+            "04"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "vision_duration"       "0.75"
+            }
+            "05"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "cast_range"	        "800"
+            }
+            "06"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "spell_lifesteal"	    "100"
+            }
+        }
+    }
+
+    "heavy_strike"
+    {
+        "AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_DONT_CANCEL_MOVEMENT"
+        "AbilityUnitDamageType"			"DAMAGE_TYPE_PURE"
+        "BaseClass"					    "ability_lua"
+        "AbilityTextureName"			"heavy_strike"
+        "ScriptFile"					"heavy_strike"
+        "MaxLevel"                      "1"
+        "AbilityCooldown"				"10"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "aoe"	                "150"
+            }
+            "02"
+            {
+                "var_type"				"FIELD_FLOAT"
+                "delay"	                "1.7"
+            }
+            "03"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "damage"	            "2"
+            }
+            "04"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "vision_duration"       "1.5"
+            }
+            "05"
+            {
+                "var_type"              "FIELD_FLOAT"
+                "stun_duration"         "2"
+            }
+            "06"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "spell_lifesteal"	    "500"
+            }
+        }
+    }
+
+    "surge"
+    {
+        "AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE"
+        "BaseClass"					    "ability_lua"
+        "AbilityTextureName"			"surge"
+        "ScriptFile"					"surge"
+        "MaxLevel"                      "1"
+        "AbilityCooldown"				"15"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"				"FIELD_FLOAT"
+                "duration"	            "5"
+            }
+            "02"
+            {
+                "var_type"				"FIELD_FLOAT"
+                "damage_amp"	        "200"
+            }
+            "03"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "move_speed"	        "550"
+            }
+        }
+    }
+
+    "scan"
+    {
+        "AbilityType"					"DOTA_ABILITY_TYPE_ULTIMATE"
+        "AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_AOE"
+        "BaseClass"					    "ability_lua"
+        "AbilityTextureName"			"scan"
+        "ScriptFile"					"scan"
+        "MaxLevel"                      "1"
+        "AbilityCooldown"				"30"
+        "AbilityCastPoint"              "1.5"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "startle_radius"	    "450"
+            }
+            "02"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "startle_duration"	    "5"
+            }
+            "03"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "startle_slow"	        "-50"
+            }
+            "04"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "count_duration"	    "15"
+            }
+            "05"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "detection_radius"	    "1500"
+            }
+        }
+    }
+}

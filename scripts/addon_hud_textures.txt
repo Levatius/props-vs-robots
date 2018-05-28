@@ -1,0 +1,14 @@
+""
+{
+    "TextureData"
+    {
+        "scan_minimap_icon"
+        {
+            "file"     "materials/vgui/hud/scan_minimap_icon.vmat"
+            "x"        "0"
+            "y"        "0"
+            "width"    "64"
+            "height"   "64"
+        }
+    }
+}
