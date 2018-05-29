@@ -2,6 +2,8 @@ require("utils")
 LinkLuaModifier("modifier_prop", LUA_MODIFIER_MOTION_NONE)
 LinkLuaModifier("modifier_haste", LUA_MODIFIER_MOTION_NONE)
 LinkLuaModifier("modifier_spawn_sleep", LUA_MODIFIER_MOTION_NONE)
+LinkLuaModifier("modifier_spawn_pogo", LUA_MODIFIER_MOTION_NONE)
+
 
 if IsInToolsMode() then
     _G.FORCE_SELECT = false
@@ -21,6 +23,7 @@ function Precache(ctx)
     PrecacheUnitByNameSync("npc_dota_hero_monkey_king", ctx)
     PrecacheUnitByNameSync("npc_dota_hero_rattletrap", ctx)
     PrecacheResource("model", "models/development/invisiblebox.vmdl", ctx)
+    PrecacheResource("model", "models/items/wards/the_monkey_sentinel/the_monkey_sentinel.vmdl", ctx)
     PrecacheResource("particle", "particles/econ/courier/courier_greevil_green/courier_greevil_green_ambient_1.vpcf", ctx)
     PrecacheResource("particle", "particles/econ/courier/courier_greevil_red/courier_greevil_red_ambient_1.vpcf", ctx)
     PrecacheResource("particle", "particles/econ/events/fall_major_2016/force_staff_fm06.vpcf", ctx)
@@ -35,6 +38,7 @@ function Precache(ctx)
     PrecacheResource("particle", "particles/units/heroes/hero_dark_willow/dark_willow_wisp_spell_debuff.vpcf", ctx)
     PrecacheResource("particle", "particles/econ/items/disruptor/disruptor_resistive_pinfold/disruptor_kf_wall_repel_smoke.vpcf", ctx)
     PrecacheResource("particle", "particles/econ/items/disruptor/disruptor_resistive_pinfold/disruptor_kf_wall_floorground.vpcf", ctx)
+    PrecacheResource("particle", "particles/units/heroes/hero_disruptor/disruptor_kf_bindingtop.vpcf", ctx)
     PrecacheResource("particle", "particles/units/heroes/hero_earthshaker/earthshaker_echoslam_start_c.vpcf", ctx)
     PrecacheResource("particle", "particles/units/heroes/hero_invoker/invoker_sun_strike.vpcf", ctx)
     PrecacheResource("particle", "particles/econ/items/invoker/invoker_apex/invoker_sun_strike_immortal1.vpcf", ctx)
@@ -240,6 +244,7 @@ function GM:InitialModifiers(hero)
     local team = hero:GetTeam()
     if team == DOTA_TEAM_GOODGUYS then
         hero:AddNewModifier(hero, nil, "modifier_haste", { duration = COUNTDOWN_PREGAME })
+        hero:AddNewModifier(hero, nil, "modifier_spawn_pogo", nil)
     elseif team == DOTA_TEAM_BADGUYS then
         hero:AddNewModifier(hero, nil, "modifier_spawn_sleep", { duration = COUNTDOWN_PREGAME })
         PlayerResource:SetCameraTarget(hero:GetPlayerID(), hero)

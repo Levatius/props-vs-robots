@@ -1,6 +1,10 @@
 modifier_charge = class({})
 
 
+function modifier_charge:IsHidden()
+    return true
+end
+
 function modifier_charge:IsMotionController()
     return true
 end
@@ -18,8 +22,8 @@ function modifier_charge:OnCreated()
         self.stunned_enemies = {}
         self.stun_duration = self:GetAbility():GetSpecialValueFor("stun_duration")
         local prop_size = self:GetParent():GetModelRadius() * self:GetParent():GetModelScale()
-        local prop_exponent = math.min(math.floor(prop_size / 50), 4)
-        self.damage_amount = math.pow(2, prop_exponent)
+        local prop_exponent = math.min(math.floor(prop_size / 50), 4) - 1
+        self.damage_amount = math.floor(math.pow(2, prop_exponent))
         self:StartIntervalThink(FrameTime())
         self.index = ParticleManager:CreateParticle("particles/econ/events/fall_major_2016/force_staff_fm06.vpcf", PATTACH_ABSORIGIN_FOLLOW, self:GetParent())
         ParticleManager:SetParticleControl(self.index, 0, self:GetParent():GetOrigin())

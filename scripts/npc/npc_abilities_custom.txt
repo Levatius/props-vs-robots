@@ -90,7 +90,7 @@
             "01"
             {
                 "var_type"				"FIELD_INTEGER"
-                "speed"	                "900"
+                "speed"	                "1200"
             }
             "02"
             {
@@ -105,7 +105,55 @@
             "04"
             {
                 "var_type"				"FIELD_INTEGER"
-                "cast_range"	        "600"
+                "cast_range"	        "900"
+            }
+        }
+    }
+
+    "bounce"
+    {
+        "AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE"
+        "BaseClass"					    "ability_lua"
+        "AbilityTextureName"			"bounce"
+        "ScriptFile"					"bounce"
+        "MaxLevel"                      "1"
+        "AbilityCooldown"				"1.5"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "speed"	                "900"
+            }
+            "02"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "impact_radius"	        "75"
+            }
+            "03"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "cast_range"	        "900"
+            }
+            "04"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "stacks_required"       "4"
+            }
+            "05"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "damage"                "8"
+            }
+            "06"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "stack_duration"        "5"
+            }
+            "07"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "min_cast_range"        "200"
             }
         }
     }
@@ -140,7 +188,7 @@
             "04"
             {
                 "var_type"				"FIELD_INTEGER"
-                "cast_range"	        "800"
+                "cast_range"	        "900"
             }
             "05"
             {
