@@ -33,19 +33,6 @@
         "ScriptFile"					"revert"
         "MaxLevel"                      "1"
         "AbilityCastPoint"				"1.5"
-        "AbilitySpecial"
-        {
-            "01"
-            {
-                "var_type"				"FIELD_INTEGER"
-                "cooldown"      	    "16"
-            }
-            "02"
-            {
-                "var_type"				"FIELD_INTEGER"
-                "damage_cooldown"      	"4"
-            }
-        }
     }
 
     "blend"
@@ -132,13 +119,13 @@
         "AbilityTextureName"			"light_shot"
         "ScriptFile"					"light_shot"
         "MaxLevel"                      "1"
-        "AbilityCooldown"				"1"
+        "AbilityCooldown"				"1.5"
         "AbilitySpecial"
         {
             "01"
             {
                 "var_type"				"FIELD_INTEGER"
-                "aoe"	                "50"
+                "aoe"	                "75"
             }
             "02"
             {
@@ -163,7 +150,7 @@
             "06"
             {
                 "var_type"              "FIELD_INTEGER"
-                "projectile_speed"      "1500"
+                "projectile_speed"      "1200"
             }
             "07"
             {

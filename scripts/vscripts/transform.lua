@@ -51,9 +51,6 @@ function transform:OnSpellStart()
             local new_health = math.ceil(max_health * caster:GetHealthPercent() / 100)
             prop_form:ModifyHealth(new_health, nil, false, 0)
             prop_form:SetBaseMoveSpeed(move_speed)
-            local revert_ability = prop_form:FindAbilityByName("revert")
-            local cooldown = revert_ability:GetSpecialValueFor("cooldown")
-            revert_ability:StartCooldown(cooldown)
             prop_form.hero = caster
         end
     end

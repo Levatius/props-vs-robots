@@ -78,6 +78,7 @@ function light_shot:OnProjectileHit()
                 }
                 ApplyDamage(damage)
                 enemy:AddNewModifier(caster, self, "modifier_light_shot", {duration=self:GetSpecialValueFor("slow_duration")})
+                enemy:Interrupt()
                 caster:Heal(self.spell_lifesteal * self.damage, self)
                 local index = ParticleManager:CreateParticle("particles/units/heroes/hero_life_stealer/life_stealer_infest_emerge_blood04.vpcf", PATTACH_ABSORIGIN_FOLLOW, enemy)
                 ParticleManager:SetParticleControl(index, 0, enemy:GetOrigin())

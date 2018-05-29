@@ -24,4 +24,8 @@ function taunt:OnSpellStart()
     elseif roll <= 20 then -- 20 = 5%
         caster:EmitSound("skywrath_mage_drag_inthebag_01")
     end
+
+    -- Awards:
+    --local player = caster:GetPlayerOwner()
+    --player.award_metrics['taunt'] = player.award_metrics['taunt'] + 1
 end

@@ -18,6 +18,8 @@ if GM == nil then
 end
 
 function Precache(ctx)
+    PrecacheUnitByNameSync("npc_dota_hero_monkey_king", ctx)
+    PrecacheUnitByNameSync("npc_dota_hero_rattletrap", ctx)
     PrecacheResource("model", "models/development/invisiblebox.vmdl", ctx)
     PrecacheResource("particle", "particles/econ/courier/courier_greevil_green/courier_greevil_green_ambient_1.vpcf", ctx)
     PrecacheResource("particle", "particles/econ/courier/courier_greevil_red/courier_greevil_red_ambient_1.vpcf", ctx)
@@ -65,8 +67,6 @@ function Precache(ctx)
     PrecacheResource("soundfile", "sounds/weapons/hero/spirit_breaker/greater_bash.vsnd", ctx)
     PrecacheResource("soundfile", "sounds/items/force_staff.vsnd", ctx)
     PrecacheResource("soundfile", "sounds/ui/scan_enemy.vsnd", ctx)
-    PrecacheUnitByNameSync("npc_dota_hero_monkey_king", ctx)
-    PrecacheUnitByNameSync("npc_dota_hero_rattletrap", ctx)
     PrecacheUnitByNameSync("scanner", ctx)
 end
 
@@ -115,6 +115,9 @@ function GM:InitGameMode()
     GameRules:SetGoldTickTime(0)
     GameRules:SetFirstBloodActive(false)
     GameRules:SetStartingGold(0)
+    GameRules:SetUseBaseGoldBountyOnHeroes(true)
+    GameRules:SetUseCustomHeroXPValues(true)
+    GameRules:SetCustomGameSetupAutoLaunchDelay(10)
 
     ListenToGameEvent("game_rules_state_change", Dynamic_Wrap(GM, 'OnGameRulesStateChange'), self)
     ListenToGameEvent("npc_spawned", Dynamic_Wrap(GM, "OnNPCSpawned"), self)
@@ -241,6 +244,19 @@ function GM:InitialModifiers(hero)
         hero:AddNewModifier(hero, nil, "modifier_spawn_sleep", { duration = COUNTDOWN_PREGAME })
         PlayerResource:SetCameraTarget(hero:GetPlayerID(), hero)
     end
+end
+
+function GM:SetupAwardMetrics(hero)
+    local player = hero:GetPlayerOwner()
+
+    player.award_metrics = {
+        ['taunts_cast'] = 0,
+        ['units_moved'] = 0,
+        ['spells_hit']  = 0,
+        ['spells_cast'] = 0,
+        ['first_blood'] = 0,
+        ['props_hit']   = 0
+    }
 end
 
 function GM:OnHeroInGame(hero)

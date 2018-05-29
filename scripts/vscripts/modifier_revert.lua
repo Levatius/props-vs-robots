@@ -9,8 +9,7 @@ end
 
 function modifier_revert:DeclareFunctions()
     local funcs = {
-        MODIFIER_EVENT_ON_DEATH,
-        MODIFIER_EVENT_ON_TAKEDAMAGE
+        MODIFIER_EVENT_ON_DEATH
     }
     return funcs
 end
@@ -35,15 +34,5 @@ function modifier_revert:OnDeath(event)
                 unit.hero:Kill(nil, attacker)
             end
         end
-    end
-end
-
-function modifier_revert:OnTakeDamage(event)
-    if IsServer() then
-        if event.unit == self:GetParent() then
-            local cooldown = self:GetAbility():GetSpecialValueFor("damage_cooldown")
-            self:GetAbility():StartCooldown(cooldown)
-        end
-
     end
 end

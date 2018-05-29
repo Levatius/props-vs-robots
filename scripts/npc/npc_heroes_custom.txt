@@ -3,7 +3,7 @@
 	"npc_dota_hero_monkey_king"
 	{
 		"override_hero"				"npc_dota_hero_monkey_king"
-		"Level"                     "0"
+		"Level"                     "1"
 		"AbilityLayout"             "4"
 		"AttackDamageMin"           "0"
         "AttackDamageMax"           "0"
@@ -37,7 +37,7 @@
 	"npc_dota_hero_rattletrap"
 	{
 	    "override_hero"				"npc_dota_hero_rattletrap"
-	    "Level"                     "0"
+	    "Level"                     "1"
 	    "AbilityLayout"             "4"
 	    "AttackDamageMin"           "0"
         "AttackDamageMax"           "0"
@@ -50,7 +50,7 @@
         "BountyGoldMax"             "0"
         "MovementSpeed"             "350"
         "MovementTurnRate"          "1"
-        "StatusHealth"              "100"
+        "StatusHealth"              "75"
         "StatusHealthRegen"         "0"
         "StatusMana"                "100"
         "StatusManaRegen"           "5"

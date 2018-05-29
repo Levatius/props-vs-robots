@@ -111,3 +111,7 @@ function GetPlayerNameByTable(t, mode)
     end
     return "N/A"
 end
+
+function HandleAwards()
+    print("hi")
+end
