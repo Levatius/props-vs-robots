@@ -48,8 +48,13 @@ end
 
 function modifier_blend:DeclareFunctions()
     return {
+        MODIFIER_PROPERTY_HEALTH_REGEN_CONSTANT,
         MODIFIER_EVENT_ON_TAKEDAMAGE
     }
+end
+
+function modifier_blend:GetModifierConstantHealthRegen()
+    return self:GetAbility():GetSpecialValueFor("heal_rate")
 end
 
 function modifier_blend:OnTakeDamage(event)

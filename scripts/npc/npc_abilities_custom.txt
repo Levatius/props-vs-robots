@@ -40,6 +40,11 @@
                 "var_type"				"FIELD_INTEGER"
                 "cooldown"      	    "16"
             }
+            "02"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "damage_cooldown"      	"4"
+            }
         }
     }
 
@@ -61,7 +66,7 @@
             "02"
             {
                 "var_type"				"FIELD_FLOAT"
-                "heal_rate"	            "1"
+                "heal_rate"	            "0.5"
             }
         }
     }
@@ -107,8 +112,8 @@
             }
             "03"
             {
-                "var_type"              "FIELD_INTEGER"
-                "stun_duration"         "2"
+                "var_type"              "FIELD_FLOAT"
+                "stun_duration"         "1.0"
             }
             "04"
             {
@@ -118,13 +123,14 @@
         }
     }
 
-    "light_strike"
+    "light_shot"
     {
         "AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_POINT | DOTA_ABILITY_BEHAVIOR_AOE | DOTA_ABILITY_BEHAVIOR_DONT_CANCEL_MOVEMENT"
+        "AbilityCastPoint"				"0.25"
         "AbilityUnitDamageType"			"DAMAGE_TYPE_PURE"
         "BaseClass"					    "ability_lua"
-        "AbilityTextureName"			"light_strike"
-        "ScriptFile"					"light_strike"
+        "AbilityTextureName"			"light_shot"
+        "ScriptFile"					"light_shot"
         "MaxLevel"                      "1"
         "AbilityCooldown"				"1"
         "AbilitySpecial"
@@ -136,28 +142,38 @@
             }
             "02"
             {
-                "var_type"				"FIELD_FLOAT"
-                "delay"	                "0.25"
-            }
-            "03"
-            {
                 "var_type"				"FIELD_INTEGER"
                 "damage"	            "1"
             }
-            "04"
+            "03"
             {
                 "var_type"              "FIELD_FLOAT"
                 "vision_duration"       "0.75"
             }
-            "05"
+            "04"
             {
                 "var_type"				"FIELD_INTEGER"
                 "cast_range"	        "800"
             }
-            "06"
+            "05"
             {
                 "var_type"				"FIELD_INTEGER"
                 "spell_lifesteal"	    "100"
+            }
+            "06"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "projectile_speed"      "1500"
+            }
+            "07"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "slow_amount"	        "-10"
+            }
+            "08"
+            {
+                "var_type"				"FIELD_INTEGER"
+                "slow_duration"	        "5"
             }
         }
     }
@@ -201,7 +217,7 @@
             "06"
             {
                 "var_type"				"FIELD_INTEGER"
-                "spell_lifesteal"	    "500"
+                "spell_lifesteal"	    "100"
             }
         }
     }
@@ -259,17 +275,22 @@
             "03"
             {
                 "var_type"				"FIELD_INTEGER"
-                "startle_slow"	        "-50"
+                "startle_slow"	        "-20"
             }
             "04"
             {
                 "var_type"				"FIELD_INTEGER"
-                "count_duration"	    "15"
+                "count_duration"	    "10"
             }
             "05"
             {
                 "var_type"				"FIELD_INTEGER"
                 "detection_radius"	    "1500"
+            }
+            "06"
+            {
+                "var_type"				"FIELD_FLOAT"
+                "update_interval"	    "0.5"
             }
         }
     }

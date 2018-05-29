@@ -12,6 +12,9 @@ function revert:OnSpellStart()
         ParticleManager:DestroyParticle(caster.revert_particles, false)
         StopSoundOn("Hero_KeeperOfTheLight.Recall.Cast", caster)
         EmitSoundOn("Hero_KeeperOfTheLight.Recall.End", caster)
+
+        local new_health = math.ceil(caster.hero:GetMaxHealth() * caster:GetHealthPercent() / 100)
+        caster.hero:ModifyHealth(new_health, nil, false, 0)
         caster:Kill(nil, nil)
     end
 end

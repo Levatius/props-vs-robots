@@ -10,14 +10,9 @@ function modifier_scan:OnCreated()
         local parent = self:GetParent()
         local radius = self:GetAbility():GetSpecialValueFor("detection_radius")
         local duration = self:GetAbility():GetSpecialValueFor("count_duration")
-        local enemies = FindUnitsInRadius(parent:GetTeamNumber(), parent:GetOrigin(), parent, radius, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO, 0, 0, false)
-        if #enemies > 0 then
-            self.buff_index = ParticleManager:CreateParticle("particles/econ/courier/courier_greevil_red/courier_greevil_red_ambient_1.vpcf", PATTACH_OVERHEAD_FOLLOW, parent)
-        else
-            self.buff_index = ParticleManager:CreateParticle("particles/econ/courier/courier_greevil_green/courier_greevil_green_ambient_1.vpcf", PATTACH_OVERHEAD_FOLLOW, parent)
-        end
-        ParticleManager:SetParticleControl(self.buff_index, 0, parent:GetOrigin() + Vector(0, 0, 300))
-        ParticleManager:SetParticleControl(self.buff_index, 2, Vector(255, 255, 255))
+
+        self.detected = nil
+        self.buff_index = nil
 
         self.smoke_index = ParticleManager:CreateParticle("particles/econ/items/disruptor/disruptor_resistive_pinfold/disruptor_kf_wall_repel_smoke.vpcf", PATTACH_ABSORIGIN_FOLLOW, parent)
         ParticleManager:SetParticleControl(self.smoke_index, 0, parent:GetOrigin() + Vector(0, 0, 300))
@@ -28,6 +23,31 @@ function modifier_scan:OnCreated()
         ParticleManager:SetParticleControl(self.ring_index, 0, parent:GetOrigin() + Vector(0, 0, 300))
         ParticleManager:SetParticleControl(self.ring_index, 1, Vector(radius, 1, 1))
         ParticleManager:SetParticleControl(self.ring_index, 2, Vector(duration, 0, 0))
+
+        self:StartIntervalThink(self:GetAbility():GetSpecialValueFor("update_interval"))
+    end
+end
+
+function modifier_scan:OnIntervalThink()
+    if IsServer() then
+        local parent = self:GetParent()
+        local radius = self:GetAbility():GetSpecialValueFor("detection_radius")
+        local enemies = FindUnitsInRadius(parent:GetTeamNumber(), parent:GetOrigin(), parent, radius, DOTA_UNIT_TARGET_TEAM_ENEMY, DOTA_UNIT_TARGET_HERO, 0, 0, false)
+        local changed = (#enemies > 0) ~= self.detected
+        self.detected = #enemies > 0
+
+        if changed then
+            if self.buff_index ~= nil then
+                ParticleManager:DestroyParticle(self.buff_index, false)
+            end
+            if self.detected then
+                self.buff_index = ParticleManager:CreateParticle("particles/econ/courier/courier_greevil_red/courier_greevil_red_ambient_1.vpcf", PATTACH_OVERHEAD_FOLLOW, parent)
+            else
+                self.buff_index = ParticleManager:CreateParticle("particles/econ/courier/courier_greevil_green/courier_greevil_green_ambient_1.vpcf", PATTACH_OVERHEAD_FOLLOW, parent)
+            end
+            ParticleManager:SetParticleControl(self.buff_index, 0, parent:GetOrigin() + Vector(0, 0, 300))
+            ParticleManager:SetParticleControl(self.buff_index, 2, Vector(255, 255, 255))
+        end
     end
 end
 

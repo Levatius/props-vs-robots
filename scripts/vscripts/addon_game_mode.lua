@@ -46,6 +46,8 @@ function Precache(ctx)
     PrecacheResource("particle", "particles/units/heroes/hero_monkey_king/monkey_king_quad_tap_stack.vpcf", ctx)
     PrecacheResource("particle", "particles/units/heroes/hero_oracle/oracle_purifyingflames_dust_hit.vpcf", ctx)
     PrecacheResource("particle", "particles/units/heroes/hero_spirit_breaker/spirit_breaker_greater_bash.vpcf", ctx)
+    PrecacheResource("particle", "particles/units/heroes/hero_vengeful/vengeful_magic_missle.vpcf", ctx)
+    PrecacheResource("particle", "particles/econ/items/vengeful/vs_ti8_immortal_shoulder/vs_ti8_immortal_magic_missle.vpcf", ctx)
     PrecacheResource("particle", "particles/units/heroes/hero_wisp/wisp_overcharge.vpcf", ctx)
     PrecacheResource("soundfile", "soundevents/voscripts/game_sounds_vo_beastmaster.vsndevts", ctx)
     PrecacheResource("soundfile", "soundevents/voscripts/game_sounds_vo_monkey_king.vsndevts", ctx)
@@ -58,6 +60,7 @@ function Precache(ctx)
     PrecacheResource("soundfile", "soundevents/game_sounds_heroes/game_sounds_spirit_breaker.vsndevts", ctx)
     PrecacheResource("soundfile", "soundevents/game_sounds_heroes/game_sounds_tinker.vsndevts", ctx)
     PrecacheResource("soundfile", "soundevents/game_sounds_heroes/game_sounds_luna.vsndevts", ctx)
+    PrecacheResource("soundfile", "soundevents/game_sounds_heroes/game_sounds_vengefulspirit.vsndevts", ctx)
     PrecacheResource("soundfile", "sounds/weapons/creep/neutral/troll_priest_heal.vsnd", ctx)
     PrecacheResource("soundfile", "sounds/weapons/hero/spirit_breaker/greater_bash.vsnd", ctx)
     PrecacheResource("soundfile", "sounds/items/force_staff.vsnd", ctx)
@@ -220,7 +223,7 @@ function GM:OnNPCSpawned(keys)
             GM:OnHeroInGame(npc)
         end
 
-        local innate_ability_names = { "transform", "light_strike", "heavy_strike", "surge", "scan" }
+        local innate_ability_names = { "transform", "light_shot", "heavy_strike", "surge", "scan" }
         for _, innate_ability_name in ipairs(innate_ability_names) do
             local innate_ability = npc:FindAbilityByName(innate_ability_name)
             if innate_ability then

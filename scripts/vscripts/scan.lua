@@ -49,6 +49,7 @@ end
 function scan:OnAbilityPhaseStart()
     if IsServer() then
         local caster = self:GetCaster()
+        caster:StartGestureWithPlaybackRate(ACT_DOTA_RATTLETRAP_POWERCOGS, 0.5)
         caster.scan_phase = ParticleManager:CreateParticle("particles/units/heroes/hero_wisp/wisp_overcharge.vpcf", PATTACH_POINT_FOLLOW, caster)
         ParticleManager:SetParticleControl(caster.scan_phase, 0, caster:GetOrigin())
         EmitSoundOn("Hero_Tinker.Rearm", caster)
@@ -59,6 +60,7 @@ end
 function scan:OnAbilityPhaseInterrupted()
     if IsServer() then
         local caster = self:GetCaster()
+        caster:RemoveGesture(ACT_DOTA_RATTLETRAP_POWERCOGS)
         ParticleManager:DestroyParticle(caster.scan_phase, false)
         StopSoundOn("Hero_Tinker.Rearm", caster)
     end

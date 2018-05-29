@@ -41,7 +41,7 @@ end
 function modifier_revert:OnTakeDamage(event)
     if IsServer() then
         if event.unit == self:GetParent() then
-            local cooldown = self:GetAbility():GetSpecialValueFor("cooldown")
+            local cooldown = self:GetAbility():GetSpecialValueFor("damage_cooldown")
             self:GetAbility():StartCooldown(cooldown)
         end
 

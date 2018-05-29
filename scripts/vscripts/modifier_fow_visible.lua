@@ -27,7 +27,7 @@ function modifier_fow_visible:GetModifierProvidesFOWVision()
 end
 
 function modifier_fow_visible:GetModifierConstantHealthRegen()
-    return self:GetAbility():GetSpecialValueFor("heal_rate")
+    return  self:GetAbility():GetSpecialValueFor("heal_rate")
 end
 
 function modifier_fow_visible:OnTakeDamage(event)
