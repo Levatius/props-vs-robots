@@ -117,13 +117,13 @@
         "AbilityTextureName"			"bounce"
         "ScriptFile"					"bounce"
         "MaxLevel"                      "1"
-        "AbilityCooldown"				"1.5"
+        "AbilityCooldown"				"3.0"
         "AbilitySpecial"
         {
             "01"
             {
                 "var_type"				"FIELD_INTEGER"
-                "speed"	                "1200"
+                "speed"	                "600"
             }
             "02"
             {
@@ -148,7 +148,7 @@
             "06"
             {
                 "var_type"              "FIELD_INTEGER"
-                "stack_duration"        "7"
+                "stack_duration"        "10"
             }
         }
     }
