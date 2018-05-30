@@ -123,7 +123,7 @@
             "01"
             {
                 "var_type"				"FIELD_INTEGER"
-                "speed"	                "900"
+                "speed"	                "1200"
             }
             "02"
             {
@@ -148,12 +148,7 @@
             "06"
             {
                 "var_type"              "FIELD_INTEGER"
-                "stack_duration"        "5"
-            }
-            "07"
-            {
-                "var_type"              "FIELD_INTEGER"
-                "min_cast_range"        "200"
+                "stack_duration"        "7"
             }
         }
     }
@@ -208,7 +203,7 @@
             "08"
             {
                 "var_type"				"FIELD_INTEGER"
-                "slow_duration"	        "5"
+                "slow_duration"	        "4"
             }
         }
     }
@@ -328,5 +323,15 @@
                 "update_interval"	    "0.5"
             }
         }
+    }
+
+    "suicide"
+    {
+        "AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+        "BaseClass"					    "ability_lua"
+        "AbilityTextureName"			"suicide"
+        "ScriptFile"					"suicide"
+        "MaxLevel"                      "1"
+        "AbilityCastPoint"              "1.0"
     }
 }

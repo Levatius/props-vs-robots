@@ -47,12 +47,6 @@ function bounce:CastResolveLocation(target, error)
             else
                 return UF_FAIL_CUSTOM
             end
-        elseif (target - self:GetCaster():GetOrigin()):Length2D() < self:GetSpecialValueFor("min_cast_range") then
-            if error then
-                return "Targeted point too close"
-            else
-                return UF_FAIL_CUSTOM
-            end
         elseif (target - self:GetCaster():GetOrigin()):Length2D() > self:GetSpecialValueFor("cast_range") then
             if error then
                 return "Targeted point too far away"

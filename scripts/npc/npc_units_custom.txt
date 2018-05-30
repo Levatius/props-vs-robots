@@ -7,7 +7,6 @@
         "BaseClass"                 "npc_dota_creature"
         "Model"                     "models/heroes/monkey_king/monkey_king.vmdl"
         "Level"                     "1"
-        "AbilityLayout"             "4"
         "SelectOnSpawn"             "1"
         "ConsideredHero"            "1"
         "AttackDamageMin"           "0"
@@ -31,7 +30,9 @@
         "Ability1"					"revert"
         "Ability2"					"blend"
         "Ability3"					"taunt"
-        "Ability4"					"charge"
+        "Ability4"                  ""
+        "Ability5"                  ""
+        "Ability6"					"charge"
     }
 
     "scanner"

@@ -15,7 +15,7 @@ end
 function modifier_spawn_pogo:OnDeath(event)
     if IsServer() then
         local unit = event.unit
-        if unit:IsRealHero() then
+        if unit:IsRealHero() and unit == self:GetParent() then
             local pogo = CreateUnitByName("pogo", unit:GetOrigin(), true, unit, unit:GetOwner(), unit:GetTeamNumber())
             pogo:AddNewModifier(pogo, self, "modifier_pogo", nil)
             pogo:SetControllableByPlayer(unit:GetPlayerID(), true)

@@ -4,7 +4,6 @@
 	{
 		"override_hero"				"npc_dota_hero_monkey_king"
 		"Level"                     "1"
-		"AbilityLayout"             "4"
 		"AttackDamageMin"           "0"
         "AttackDamageMax"           "0"
 		"ArmorPhysical"             "0"
@@ -38,7 +37,6 @@
 	{
 	    "override_hero"				"npc_dota_hero_rattletrap"
 	    "Level"                     "1"
-	    "AbilityLayout"             "4"
 	    "AttackDamageMin"           "0"
         "AttackDamageMax"           "0"
         "ArmorPhysical"             "0"
@@ -63,8 +61,8 @@
         "Ability1"					"light_shot"
         "Ability2"					"heavy_strike"
         "Ability3"					"surge"
-        "Ability4"					"scan"
+        "Ability4"					""
         "Ability5"					""
-        "Ability6"					""
+        "Ability6"					"scan"
 	}
 }

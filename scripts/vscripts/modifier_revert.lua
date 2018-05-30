@@ -24,14 +24,18 @@ function modifier_revert:OnDeath(event)
             unit.hero:SetOrigin(unit:GetOrigin())
             unit.hero:RemoveNoDraw()
             unit.hero:AddNewModifier(unit.hero, unit.hero:FindAbilityByName("transform"), "aura_show_props", nil)
-            if FORCE_SELECT then
-                PlayerResource:SetOverrideSelectionEntity(unit.hero:GetPlayerID(), unit.hero)
-            end
-            for i = 0, 3 do
-                unit.hero:GetAbilityByIndex(i):MarkAbilityButtonDirty()
-            end
+
             if attacker ~= nil then
                 unit.hero:Kill(nil, attacker)
+            end
+
+            if unit.hero:IsAlive() then
+                if FORCE_SELECT then
+                    PlayerResource:SetOverrideSelectionEntity(unit.hero:GetPlayerID(), unit.hero)
+                end
+                for i = 0, 3 do
+                    unit.hero:GetAbilityByIndex(i):MarkAbilityButtonDirty()
+                end
             end
         end
     end
