@@ -48,7 +48,7 @@
             "01"
             {
                 "var_type"				"FIELD_FLOAT"
-                "fow_visible_delay"	    "5"
+                "fow_visible_delay"	    "4"
             }
             "02"
             {
