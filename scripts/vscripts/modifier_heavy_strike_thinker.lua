@@ -49,12 +49,20 @@ function modifier_heavy_strike_thinker:OnIntervalThink()
             local index = ParticleManager:CreateParticle("particles/items3_fx/octarine_core_lifesteal.vpcf", PATTACH_ABSORIGIN_FOLLOW, self:GetCaster())
             ParticleManager:SetParticleControl(index, 0, self:GetCaster():GetOrigin())
             ParticleManager:ReleaseParticleIndex(index)
+
+            local player = self:GetParent():GetPlayerOwner()
+            player.stats["hits_right"] = player.stats["hits_right"] + 1
         else
-            local props = Entities:FindAllByClassnameWithin("npc_dota_building", self:GetParent():GetOrigin(), self.aoe)
+            local props = Entities:FindAllByNameWithin("npc_dota_creature", self:GetParent():GetOrigin(), self.aoe)
+            for _, prop in pairs(props) do
+                if prop:GetUnitName() ~= "prop" then
+                    table.remove(prop)
+                end
+            end
             if #props > 0 then
                 local particle_flag = false
                 for _, prop in pairs(props) do
-                    if (self:GetParent():GetOrigin() - prop:GetOrigin()):Length2D() < self.aoe then
+                    if (self:GetParent():GetOrigin() - prop:GetOrigin()):Length2D() < self.aoe and prop:HasModifier("modifier_active_prop") then
                         local prop_size = prop:GetModelRadius() * prop:GetModelScale()
                         local prop_exponent = math.min(math.floor(prop_size / 50), 4)
                         local health_penalty = math.pow(2, prop_exponent)
@@ -74,6 +82,9 @@ function modifier_heavy_strike_thinker:OnIntervalThink()
                     ParticleManager:SetParticleControl(index, 0, self:GetCaster():GetOrigin())
                     ParticleManager:ReleaseParticleIndex(index)
                 end
+
+                local player = self:GetParent():GetPlayerOwner()
+                player.stats["hits_wrong"] = player.stats["hits_wrong"] + #props
             end
         end
 
@@ -82,6 +93,10 @@ function modifier_heavy_strike_thinker:OnIntervalThink()
         ParticleManager:SetParticleControl(index, 1, Vector(self.heavy_strike_aoe, 1, 1))
         ParticleManager:ReleaseParticleIndex(index)
         EmitSoundOnLocationWithCaster(self:GetParent():GetOrigin(), "Hero_Invoker.SunStrike.Ignite", self:GetCaster())
+
+        local player = self:GetParent():GetPlayerOwner()
+        player.stats["cast"] = player.stats["cast"] + 1
+
         UTIL_Remove(self:GetParent())
     end
 end

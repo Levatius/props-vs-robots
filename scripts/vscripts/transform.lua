@@ -15,9 +15,9 @@ function transform:OnSpellStart()
         StopSoundOn("Hero_KeeperOfTheLight.Recall.Target", caster)
 
         local search_radius = self:GetSpecialValueFor("search_radius")
-        local nearest_prop = Entities:FindByClassnameNearest("npc_dota_building", self:GetCursorPosition(), search_radius)
+        local nearest_prop = Entities:FindByNameNearest("npc_dota_creature", self:GetCursorPosition(), search_radius)
 
-        if nearest_prop ~= nil then
+        if nearest_prop ~= nil and nearest_prop:HasModifier("modifier_active_prop") then
             local index = ParticleManager:CreateParticle("particles/units/heroes/hero_keeper_of_the_light/keeper_of_the_light_blinding_light_aoe.vpcf", PATTACH_WORLDORIGIN, caster)
             ParticleManager:SetParticleControl(index, 0, caster:GetOrigin())
             ParticleManager:SetParticleControl(index, 1, caster:GetOrigin())
@@ -71,8 +71,8 @@ end
 function transform:CastResolveLocation(target, error)
     if IsServer() then
         local search_radius = self:GetSpecialValueFor("search_radius")
-        local nearest_prop = Entities:FindByClassnameNearest("npc_dota_building", target, search_radius)
-        if nearest_prop == nil then
+        local nearest_prop = Entities:FindByNameNearest("npc_dota_creature", target, search_radius)
+        if nearest_prop == nil or not nearest_prop:HasModifier("modifier_active_prop") then
             if error then
                 return "No prop targeted"
             else

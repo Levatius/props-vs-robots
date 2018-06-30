@@ -53,7 +53,7 @@
             "02"
             {
                 "var_type"				"FIELD_FLOAT"
-                "heal_rate"	            "0.5"
+                "heal_rate"	            "1.0"
             }
         }
     }
@@ -123,7 +123,7 @@
             "01"
             {
                 "var_type"				"FIELD_INTEGER"
-                "speed"	                "600"
+                "speed"	                "900"
             }
             "02"
             {
@@ -148,7 +148,7 @@
             "06"
             {
                 "var_type"              "FIELD_INTEGER"
-                "stack_duration"        "10"
+                "stack_duration"        "15"
             }
         }
     }
@@ -193,7 +193,7 @@
             "06"
             {
                 "var_type"              "FIELD_INTEGER"
-                "projectile_speed"      "1200"
+                "projectile_speed"      "1500"
             }
             "07"
             {

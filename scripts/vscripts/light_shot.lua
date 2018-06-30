@@ -88,12 +88,20 @@ function light_shot:OnProjectileHit()
             local index = ParticleManager:CreateParticle("particles/items3_fx/octarine_core_lifesteal.vpcf", PATTACH_ABSORIGIN_FOLLOW, caster)
             ParticleManager:SetParticleControl(index, 0, caster:GetOrigin())
             ParticleManager:ReleaseParticleIndex(index)
+
+            local player = caster:GetPlayerOwner()
+            player.stats["hits_right"] = player.stats["hits_right"] + 1
         else
-            local props = Entities:FindAllByClassnameWithin("npc_dota_building", self.target:GetOrigin(), self.aoe)
+            local props = Entities:FindAllByNameWithin("npc_dota_creature", self.target:GetOrigin(), self.aoe)
+            for _, prop in pairs(props) do
+                if prop:GetUnitName() ~= "prop" then
+                    table.remove(prop)
+                end
+            end
             if #props > 0 then
                 local particle_flag = false
                 for _, prop in pairs(props) do
-                    if (self.target:GetOrigin() - prop:GetOrigin()):Length2D() < self.aoe then
+                    if (self.target:GetOrigin() - prop:GetOrigin()):Length2D() < self.aoe and prop:HasModifier("modifier_active_prop") then
                         local prop_size = prop:GetModelRadius() * prop:GetModelScale()
                         local prop_exponent = math.min(math.floor(prop_size / 50), 4)
                         local health_penalty = math.pow(2, prop_exponent)
@@ -113,9 +121,16 @@ function light_shot:OnProjectileHit()
                     ParticleManager:SetParticleControl(index, 0, caster:GetOrigin())
                     ParticleManager:ReleaseParticleIndex(index)
                 end
+
+                local player = caster:GetPlayerOwner()
+                player.stats["hits_wrong"] = player.stats["hits_wrong"] + 1
             end
         end
         EmitSoundOn("Hero_VengefulSpirit.MagicMissileImpact", self.target)
+
+        local player = caster:GetPlayerOwner()
+        player.stats["cast"] = player.stats["cast"] + 1
+
         UTIL_Remove(self.target)
     end
 end

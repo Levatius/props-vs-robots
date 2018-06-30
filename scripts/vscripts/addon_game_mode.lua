@@ -1,3 +1,5 @@
+require("config")
+require("round")
 require("utils")
 LinkLuaModifier("modifier_prop", LUA_MODIFIER_MOTION_NONE)
 LinkLuaModifier("modifier_haste", LUA_MODIFIER_MOTION_NONE)
@@ -7,12 +9,9 @@ LinkLuaModifier("modifier_spawn_pogo", LUA_MODIFIER_MOTION_NONE)
 
 if IsInToolsMode() then
     _G.FORCE_SELECT = false
-    _G.COUNTDOWN_PREGAME = 5
 else
     _G.FORCE_SELECT = true
-    _G.COUNTDOWN_PREGAME = 30
 end
-_G.COUNTDOWN_MAIN = 60 * 4.0
 _G.PROP_PCT_TO_REMOVE = 0.2
 
 if GM == nil then
@@ -20,6 +19,7 @@ if GM == nil then
 end
 
 function Precache(ctx)
+    PrecacheUnitByNameSync("npc_dota_hero_wisp", ctx)
     PrecacheUnitByNameSync("npc_dota_hero_monkey_king", ctx)
     PrecacheUnitByNameSync("npc_dota_hero_rattletrap", ctx)
     PrecacheResource("model", "models/development/invisiblebox.vmdl", ctx)
@@ -81,13 +81,11 @@ end
 function GM:InitGameMode()
     print("Prop Hunt initialising...")
 
-    self.pregame = true
-
     self.team_colours = {}
     self.team_colours[DOTA_TEAM_GOODGUYS] = { 250, 175, 0 }
     self.team_colours[DOTA_TEAM_BADGUYS] = { 175, 0, 250 }
 
-    for team = 0, (DOTA_TEAM_COUNT - 1) do
+    for team = 0, DOTA_TEAM_COUNT - 1 do
         local colour = self.team_colours[team]
         if colour then
             SetTeamCustomHealthbarColor(team, colour[1], colour[2], colour[3])
@@ -97,7 +95,7 @@ function GM:InitGameMode()
     GameRules:GetGameModeEntity().GM = self
     local GameMode = GameRules:GetGameModeEntity()
 
-    GameMode:SetCustomGameForceHero("npc_dota_hero_monkey_king")
+    GameMode:SetCustomGameForceHero("npc_dota_hero_wisp")
     GameMode:SetAnnouncerDisabled(true)
     GameMode:SetBuybackEnabled(false)
 
@@ -108,12 +106,13 @@ function GM:InitGameMode()
     GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS, 3)
 
     GameRules:SetCustomGameEndDelay(0)
-    GameRules:SetCustomVictoryMessageDuration(10)
-    GameRules:SetPreGameTime(COUNTDOWN_PREGAME)
+    GameRules:SetCustomVictoryMessageDuration(0)
+    GameRules:SetPreGameTime(LOADING_TIME)
     GameRules:SetStrategyTime(0)
     GameRules:SetShowcaseTime(0)
-    GameRules:GetGameModeEntity():SetTopBarTeamValuesOverride(true)
-    GameRules:GetGameModeEntity():SetTopBarTeamValuesVisible(false)
+    GameRules:SetPostGameTime(POST_ROUND_TIME)
+    GameMode:SetTopBarTeamValuesOverride(true)
+    GameMode:SetTopBarTeamValuesVisible(false)
     GameRules:SetHeroRespawnEnabled(false)
     GameRules:SetGoldPerTick(0)
     GameRules:SetGoldTickTime(0)
@@ -121,163 +120,110 @@ function GM:InitGameMode()
     GameRules:SetStartingGold(0)
     GameRules:SetUseBaseGoldBountyOnHeroes(true)
     GameRules:SetUseCustomHeroXPValues(true)
-    GameRules:SetCustomGameSetupAutoLaunchDelay(10)
+    GameRules:LockCustomGameSetupTeamAssignment(true)
+    GameRules:EnableCustomGameSetupAutoLaunch(true)
 
     ListenToGameEvent("game_rules_state_change", Dynamic_Wrap(GM, 'OnGameRulesStateChange'), self)
-    ListenToGameEvent("npc_spawned", Dynamic_Wrap(GM, "OnNPCSpawned"), self)
+    ListenToGameEvent("npc_spawned", Dynamic_Wrap(GM, 'OnNPCSpawned'), self)
     Convars:RegisterCommand("spawn_hider", Dynamic_Wrap(GM, "SpawnHider"), "Spawns a hider", FCVAR_CHEAT)
     Convars:RegisterCommand("spawn_seeker", Dynamic_Wrap(GM, "SpawnSeeker"), "Spawns a seeker", FCVAR_CHEAT)
+    Convars:RegisterCommand("start_new_round", Dynamic_Wrap(GM, "StartNewRound"), "Force a new round to start", FCVAR_CHEAT)
 
-    GameRules:GetGameModeEntity():SetThink("OnThink", self, 1)
+    self:BuildingsToCreatures()
+    GameMode:SetThink("OnThink", self, 1)
 
+    CustomGameEventManager:RegisterListener("rounds_vote", Dynamic_Wrap(GM, "OnRoundsVote"))
     CustomGameEventManager:Send_ServerToAllClients("get_map_name", { map_name = GetMapName() })
 end
 
 function GM:OnThink()
-    for player_id = 0, (DOTA_MAX_TEAM_PLAYERS - 1) do
-        self:UpdatePlayerColor(player_id)
-    end
-
-    if GameRules:IsGamePaused() == true then
+    if GameRules:IsGamePaused() then
         return 1
     end
 
-    if self.countdown_enabled == true then
-        if COUNTDOWN_PREGAME <= 0 and self.pregame then
+    if self.countdown_enabled then
+
+        if self.current_round.in_pregame then
+            if self.current_round.time_remaining <= 0 then
+                print('Pre Over')
+                self.current_round.time_remaining = ROUND_TIME
+                self.current_round.in_pregame = false
+                CustomGameEventManager:Send_ServerToAllClients("release_seekers", {})
+                CustomGameEventManager:Send_ServerToAllClients("timer_main", {})
+            end
+        elseif not self.current_round.in_postgame then
+            if self.current_round.time_remaining == 30 then
+                CustomGameEventManager:Send_ServerToAllClients("timer_alert", nil)
+            elseif self.current_round.time_remaining <= 0 then
+                print('Round Over')
+                CustomGameEventManager:Send_ServerToAllClients("victory", { winning_team = DOTA_TEAM_GOODGUYS })
+                self.current_round:PostGame()
+            else
+                self.current_round:CheckEndClauses()
+            end
+        elseif self.current_round.in_postgame then
+            if self.current_round.time_remaining <= 0 then
+                self.round_id = self.round_id + 1
+                if self.round_id > self.round_total then
+                    self.countdown_enabled = false
+                else
+                    CustomGameEventManager:Send_ServerToAllClients("update_rounds", { round_id = self.round_id, round_total = self.round_total })
+
+                    self.current_round:Start()
+                end
+            elseif self.current_round.time_remaining == LOADING_TIME and not self.game_over_flag then
+                self.current_round:Load()
+                self.current_round:Hero()
+            else
+                if self.round_id == self.round_total and not self.game_over_flag then
+                    GameRules:SetGameWinner(0)
+                    CustomGameEventManager:Send_ServerToAllClients("timer_end", {})
+                    self.game_over_flag = true
+                elseif not self.game_over_flag then
+                    CustomGameEventManager:Send_ServerToAllClients("timer_post", {})
+                end
+            end
         end
 
-        if COUNTDOWN_MAIN == 30 then
-            CustomGameEventManager:Send_ServerToAllClients("timer_alert", {})
-        elseif COUNTDOWN_MAIN <= 0 then
-            GameRules:SetGameWinner(DOTA_TEAM_GOODGUYS)
-            self.countdown_enabled = false
-        else
-            GM:CheckAlive()
-        end
-
-        CountdownManager(self.pregame)
+        self.current_round:BroadcastTimer()
+        self.current_round.time_remaining = self.current_round.time_remaining - 1
     end
 
     return 1
 end
 
-function GM:CheckAlive()
-    local hiders = Entities:FindAllByClassname("npc_dota_hero_monkey_king")
-    local seekers = Entities:FindAllByClassname("npc_dota_hero_rattletrap")
-    local hiders_alive = 0
-    local seekers_alive = 0
-    for _, hero in pairs(hiders) do
-        if hero:IsAlive() then
-            hiders_alive = hiders_alive + 1
-        end
-    end
-    for _, hero in pairs(seekers) do
-        if hero:IsAlive() then
-            seekers_alive = seekers_alive + 1
-        end
-    end
-    if #hiders > 0 then
-        if hiders_alive == 0 then
-            GameRules:SetGameWinner(DOTA_TEAM_BADGUYS)
-            self.countdown_enabled = false
-        end
-    end
-    if #seekers > 0 then
-        if seekers_alive == 0 then
-            GameRules:SetGameWinner(DOTA_TEAM_GOODGUYS)
-            self.countdown_enabled = false
-        end
-    end
-end
-
-function GM:UpdatePlayerColor(player_id)
-    if not PlayerResource:HasSelectedHero(player_id) then
-        return
-    end
-
-    local hero = PlayerResource:GetSelectedHeroEntity(player_id)
-    if hero == nil then
-        return
-    end
-
-    local team_id = PlayerResource:GetTeam(player_id)
-    local colour = self.team_colours[team_id]
-    PlayerResource:SetCustomPlayerColor(player_id, colour[1], colour[2], colour[3])
-end
-
-function GM:RandomiseProps(pct_to_remove)
-    local props = Entities:FindAllByClassname("npc_dota_building")
-    local shuffled_props = ShuffledList(props, pct_to_remove)
-    for _, prop in pairs(shuffled_props) do
-        prop:RemoveSelf()
-    end
-end
-
-function GM:HidePropsFromMinimap()
-    local props = Entities:FindAllByClassname("npc_dota_building")
-    for _, prop in pairs(props) do
-        if not prop:HasModifier("modifier_prop") then
-            prop:AddNewModifier(prop, nil, "modifier_prop", {})
-        end
-    end
-end
-
 function GM:OnNPCSpawned(keys)
     local npc = EntIndexToHScript(keys.entindex)
     if npc:IsRealHero() then
-        if npc:GetPlayerOwner().first_spawned == nil then
+        if not npc:GetPlayerOwner().first_spawned then
             npc:GetPlayerOwner().first_spawned = true
             GM:OnHeroInGame(npc)
         end
-
-        local innate_ability_names = { "transform", "light_shot", "heavy_strike", "surge", "scan" }
-        for _, innate_ability_name in ipairs(innate_ability_names) do
-            local innate_ability = npc:FindAbilityByName(innate_ability_name)
-            if innate_ability then
-                innate_ability:SetLevel(1)
-            end
-        end
     end
 end
 
-function GM:InitialModifiers(hero)
-    local team = hero:GetTeam()
-    if team == DOTA_TEAM_GOODGUYS then
-        hero:AddNewModifier(hero, nil, "modifier_haste", { duration = COUNTDOWN_PREGAME })
-        hero:AddNewModifier(hero, nil, "modifier_spawn_pogo", nil)
-    elseif team == DOTA_TEAM_BADGUYS then
-        hero:AddNewModifier(hero, nil, "modifier_spawn_sleep", { duration = COUNTDOWN_PREGAME })
-        PlayerResource:SetCameraTarget(hero:GetPlayerID(), hero)
-    end
-end
 
-function GM:SetupAwardMetrics(hero)
-    local player = hero:GetPlayerOwner()
-
-    player.award_metrics = {
-        ['taunts_cast'] = 0,
-        ['units_moved'] = 0,
-        ['spells_hit']  = 0,
-        ['spells_cast'] = 0,
-        ['first_blood'] = 0,
-        ['props_hit']   = 0
-    }
-end
 
 function GM:OnHeroInGame(hero)
-    local team = hero:GetTeam()
-    local player_id = hero:GetPlayerOwnerID()
-    local player = hero:GetPlayerOwner()
-    local hero_name = hero:GetName()
+    print('on_hero_in_game')
+    self.current_round:SetupRespawn(hero)
+    self.current_round:SetupHero(hero)
+end
 
-    GM:InitialModifiers(hero)
-
-    if team == DOTA_TEAM_BADGUYS then
-        PrecacheUnitByNameAsync(hero_name, function()
-            local new_hero = PlayerResource:ReplaceHeroWith(player_id, "npc_dota_hero_rattletrap", 0, 0)
-            UTIL_Remove(hero)
-            GM:InitialModifiers(new_hero)
-        end, player_id)
+function GM:BuildingsToCreatures()
+    if IsServer() then
+        local props = Entities:FindAllByClassname("npc_dota_building")
+        for _, prop in pairs(props) do
+            local new_prop = CreateUnitByName("prop", prop:GetOrigin(), true, nil, nil, 0)
+            local prop_angles = prop:GetAnglesAsVector()
+            new_prop:SetAngles(prop_angles.x, prop_angles.y, prop_angles.z)
+            local prop_model = prop:GetModelName()
+            new_prop:SetModel(prop_model)
+            new_prop:SetOriginalModel(prop_model)
+            local prop_scale = prop:GetModelScale()
+            new_prop:SetModelScale(prop_scale)
+            UTIL_Remove(prop)
+        end
     end
 end
 
@@ -285,21 +231,45 @@ function GM:OnGameRulesStateChange()
     local new_state = GameRules:State_Get()
 
     if new_state == DOTA_GAMERULES_STATE_HERO_SELECTION then
-        InitCountdown()
-        self:RandomiseProps(PROP_PCT_TO_REMOVE)
-        self:HidePropsFromMinimap()
+        print('hero_select')
+        self.countdown_enabled = false
+        self.current_round = Round:new()
+        self.current_round:Load()
+        self.round_total = self:ResolveNumberOfRounds()
+        print("Rounds voted for:", self.round_total)
+        self.round_id = 1
     end
 
     if new_state == DOTA_GAMERULES_STATE_PRE_GAME then
-        self.pregame = true
-        self.countdown_enabled = true
+        print('pre_game')
     end
 
     if new_state == DOTA_GAMERULES_STATE_GAME_IN_PROGRESS then
-        self.pregame = false
-        CustomGameEventManager:Send_ServerToAllClients("release_seekers", {})
-        CustomGameEventManager:Send_ServerToAllClients("timer_main", {})
+        print('in_progress')
+        CustomGameEventManager:Send_ServerToAllClients("update_rounds", { round_id = self.round_id, round_total = self.round_total })
+        self.countdown_enabled = true
+        self.current_round:Start()
     end
+end
+
+function GM:OnRoundsVote(args)
+    local player = PlayerResource:GetPlayer(args["player_id"])
+    player.rounds_vote = args["rounds_vote"]
+end
+
+function GM:ResolveNumberOfRounds()
+    local votes_table = { ["1"] = 0, ["2"] = 0, ["4"] = 0 }
+    for pid = 0, DOTA_MAX_TEAM_PLAYERS - 1 do
+        local player = PlayerResource:GetPlayer(pid)
+        if player then
+            if player.rounds_vote then
+                votes_table[player.rounds_vote] = votes_table[player.rounds_vote] + 1
+            else
+                votes_table["2"] = votes_table["2"] + 1
+            end
+        end
+    end
+    return tonumber(GetMaxKey(votes_table))
 end
 
 function GM:SpawnHider()
@@ -328,4 +298,11 @@ function GM:SpawnSeeker()
             unit:SetControllableByPlayer(player_id, false)
         end
     end
+end
+
+function GM:StartNewRound()
+    GameRules:ResetToHeroSelection()
+    --    for player, _ in pairs(self.current_round.players) do
+    --        player.first_spawned = false
+    --    end
 end

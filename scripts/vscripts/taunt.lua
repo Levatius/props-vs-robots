@@ -26,6 +26,6 @@ function taunt:OnSpellStart()
     end
 
     -- Awards:
-    --local player = caster:GetPlayerOwner()
-    --player.award_metrics['taunt'] = player.award_metrics['taunt'] + 1
+    local player = caster:GetPlayerOwner()
+    player.stats["taunt"] = player.stats["taunt"] + 1
 end

@@ -4,12 +4,20 @@ modifier_fow_visible = class({})
 function modifier_fow_visible:OnCreated()
     if IsServer() then
         self:GetParent():SetMoveCapability(DOTA_UNIT_CAP_MOVE_NONE)
+        self:StartIntervalThink(1)
     end
 end
 
 function modifier_fow_visible:OnDestroy()
     if IsServer() then
         self:GetParent():SetMoveCapability(DOTA_UNIT_CAP_MOVE_GROUND)
+    end
+end
+
+function modifier_fow_visible:OnIntervalThink()
+    if IsServer() then
+        local player = self:GetParent():GetPlayerOwner()
+        player.stats["still"] = player.stats["still"] + 1
     end
 end
 

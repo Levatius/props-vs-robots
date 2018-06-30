@@ -43,7 +43,12 @@ function modifier_light_strike_thinker:OnIntervalThink()
             ParticleManager:SetParticleControl(index, 0, self:GetCaster():GetOrigin())
             ParticleManager:ReleaseParticleIndex(index)
         else
-            local props = Entities:FindAllByClassnameWithin("npc_dota_building", self:GetParent():GetOrigin(), self.aoe)
+            local props = Entities:FindAllByNameWithin("npc_dota_creature", self:GetParent():GetOrigin(), self.aoe)
+            for _, prop in pairs(props) do
+                if prop:GetUnitName() ~= "prop" then
+                    table.remove(prop)
+                end
+            end
             if #props > 0 then
                 local particle_flag = false
                 for _, prop in pairs(props) do
